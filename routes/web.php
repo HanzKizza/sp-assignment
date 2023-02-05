@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
+
+Route::post('/filePreview', 'fileController@filePreview')->name('filePreview');
+
+Route::post('/uploadStudents', 'fileController@uploadStudents')->name('uploadStudents');
