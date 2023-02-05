@@ -1,5 +1,5 @@
 <h5>Proof read this data</h5>
-<table class="table text-white">
+<table class="table">
     @php 
         $data = json_decode($data);
     

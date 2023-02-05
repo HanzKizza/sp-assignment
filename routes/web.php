@@ -20,3 +20,12 @@ Route::get('/', function () {
 Route::post('/filePreview', 'fileController@filePreview')->name('filePreview');
 
 Route::post('/uploadStudents', 'fileController@uploadStudents')->name('uploadStudents');
+
+Route::get('/viewMarks', 'viewController@viewMarks')->name('viewMarks');
+
+
+//Ive done this cos I don wanna edit the initial route
+Route::get('/uploadMarks', function(){
+    return view('home');
+})->name('uploadMarks');
+
