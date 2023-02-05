@@ -32,68 +32,31 @@
             @include('header')
         </div> 
         <div class="container d-flex align-items-center justify-content-center mt-5">
-            <div class="card vw-50">
+            <div class="card" style="width: 70%; border:none">
                 <div class="card-header text-center bg-primary text-white">
-                    <h5 class="text-center">Upload Student Marks</h5>
+                    <h5 class="text-center">Student Marks</h5>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="" enctype="multipart/form-data" id="fileUploadForm" onsubmit="uploadStudents(event)">
-                        <label for="upload file">Upload a file</label>
-                        <input onchange="filePreview()" class="form-control" type="file" name="studentfile" id="studentfile" required/>
-                        <div class="server-response my-3 text-center"></div>
-                        <div>
-                            <button class="btn btn-success p-1" type="submit" style="width:40%">Submit</button>
-                            <button class="btn btn-warning p-1" type="reset" style="width:40%; margin-left:18%">Reset</button>
-                        </div>
-                    </form>
+                    <table class="table text-center">
+                        <head>
+                            <tr>
+                                <th>Name</th>
+                                <th>Mark</th>
+                                <th>Grade</th>
+                            </tr>
+                        </head>
+                        <body>
+                            @foreach ($marks as $mark)
+                                <tr>
+                                    <td>{{ $mark->name }}</td>
+                                    <td>{{ $mark->mark }}</td>
+                                    <td>{{ $mark->grade }}</td>
+                                </tr>
+                            @endforeach
+                        </body>
+                    </table>
                 </div>
             </div>
         </div>
     </body>
 </html>
-
-
-<script>
-    function filePreview(){
-        var formdata = new FormData(document.getElementById("fileUploadForm"))
-        formdata.append('_token', "{{ csrf_token() }}")
-        $("#fileUploadForm .server-response").html('<i class="fa fa-spinner fa-spin" style="font-size: 25px; margin-right:9px"></i> <b>loading...</b>');
-        $.ajax({
-            type: "POST",
-            url: "/filePreview",
-            data: formdata,
-            processData: false,
-            contentType: false,
-            //headers: {'X-CSFR-TOKEN':$('meta[name="csrf-token"]').attr('content')},
-            success: function (response) {
-                $("#fileUploadForm .server-response").html(response);
-            },
-            error:function(response){
-                alert(JSON.stringify(response))
-                $("#fileUploadForm .server-response").html(response);
-            }
-        });
-    }
-
-    function uploadStudents(e){
-        e.preventDefault()
-        var formdata = new FormData(document.getElementById("fileUploadForm"))
-        formdata.append('_token', "{{ csrf_token() }}")
-        $("#fileUploadForm .server-response").html('<i class="fa fa-spinner fa-spin" style="font-size: 25px; margin-right:9px"></i> <b>loading...</b>');
-        $.ajax({
-            type: "POST",
-            url: "/uploadStudents",
-            data: formdata,
-            processData: false,
-            contentType: false,
-            //headers: {'X-CSFR-TOKEN':$('meta[name="csrf-token"]').attr('content')},
-            success: function (response) {
-                $("#fileUploadForm .server-response").html(response);
-            },
-            error:function(response){
-                alert(JSON.stringify(response))
-                $("#fileUploadForm .server-response").html(response);
-            }
-        });
-    }
-</script>
