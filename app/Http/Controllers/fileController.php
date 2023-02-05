@@ -64,6 +64,8 @@ class fileController extends Controller
             $rows = explode("\n", $file);
             $response = array();
 
+            $gradecount = array(0, 0, 0, 0);  //I will use this array to count how many students are in whick grade
+
             $counter = 0;
             
                         
@@ -79,12 +81,28 @@ class fileController extends Controller
                 $grade = $data[2];
 
                 $grade = $this->gradeStudent($mark);
+
+                //update the grade count
+                if(strcasecmp($grade, "Grade 1")){
+                    $gradecount[0]++;
+                }
+                else if(strcasecmp($grade, "Grade 2")){
+                    $gradecount[1]++;
+                }
+                else if(strcasecmp($grade, "Grade 3")){
+                    $gradecount[2]++;
+                }
+                else if(strcasecmp($grade, "Grade 4")){
+                    $gradecount[3]++;
+                }
+
                 // save to the databasae
                 DB::insert("insert into student_marks values(DEFAULT, '{$name}', '{$mark}', '{$grade}')");
                 echo "Student Data Uploaded Successfully ";
 
 
                 // Send an information email
+                // $this->sendEmail($gradecount);     //uncomment this after configuring smtp
             }
             Storage::delete($path);
         }
@@ -92,7 +110,6 @@ class fileController extends Controller
             echo "No file";
         }
     }
-
 
 
                                         // student grading
@@ -117,4 +134,30 @@ class fileController extends Controller
         
         return $grade;
     }
+
+
+    public function sendEmail($gradecount){
+        $text = "Dear Ivan, A file upload of student marks has been made. The summary is below <br /> 
+                 Grade 1: {$gradecount[0]} <br />
+                 Grade 2: {$gradecount[1]} <br />
+                 Grade 3: {$gradecount[2]} <br />
+                 Grade 4: {$gradecount[3]} <br />
+                <br />
+                Thank you
+                }";
+
+                $to = "hanningtonkizza@gmail.com";
+                $subject = "Test";
+                
+                // Always set content-type when sending HTML email
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                
+                // More headers
+                $headers .= 'From: <webmaster@example.com>' . "\r\n";
+                $headers .= 'Cc: myboss@example.com' . "\r\n";
+                
+                mail($to,$subject,$text,$headers);
+    }
+
 }
